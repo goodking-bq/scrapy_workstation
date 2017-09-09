@@ -1,0 +1,4 @@
+flask
+flask-mongoengine
+Flask-Script
+flask-pymongo

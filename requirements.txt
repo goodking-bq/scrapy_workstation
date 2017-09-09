@@ -1,0 +1,9 @@
+scrapy
+scrapyd-client
+scrapyd
+requests
+flask
+plotly
+pandas
+flask-pymongo
+flask-script

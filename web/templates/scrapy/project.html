@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block content %}
+    <section class="content-header">
+        <h1>
+            爬虫项目
+            <small>所有的项目都在这里了</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+            <li><a href="#">爬虫</a></li>
+            <li class="active">项目</li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    <div class="btn-group">
+                        <div class="btn btn-danger" id="div-sure"
+                             onclick="$('#form-header').removeClass('hidden');$(this).addClass('hidden');$('#div-cancel').removeClass('hidden');">
+                            <i class="fa fa-plus"></i> 添加
+                        </div>
+                        <div class="btn btn-danger hidden" id="div-cancel"
+                             onclick="$('#form-header').addClass('hidden');$(this).addClass('hidden');$('#div-sure').removeClass('hidden');">
+                            <i class="fa fa-reply"></i> 取消
+                        </div>
+                        <a class="btn btn-primary" href="{{ url_for('scrapy.refresh_project') }}"><i
+                                class="fa fa-refresh"></i> 刷新</a>
+                    </div>
+                </h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+                            title="Collapse">
+                        <i class="fa fa-minus"></i></button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip"
+                            title="Remove">
+                        <i class="fa fa-times"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="box-header hidden" id="form-header">
+                    <h4 class="box-title">添加爬虫</h4>
+                    <hr/>
+                    <form class="form-inline" enctype="multipart/form-data" action="/scrapy/project_manager/" method="post">
+                        <input type="hidden" name="project_id" id="project_id">
+                        <div class="input-group">
+                            <span class="input-group-addon">名称</span>
+                            <input name="name" type="text" class="form-control" id="name">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon">别名</span>
+                            <input name="alias" type="text" class="form-control" id="alias">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon">说明</span>
+                            <input name="description" type="text" class="form-control" id="description">
+                        </div>
+                        <input name="egg" type="file" class="form-control">
+                        <input type="submit" value="确定" class="btn btn-info ">
+                    </form>
+                    <hr/>
+                </div>
+
+                <table class="table table-bordered table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>操作</th>
+                        <th>名称</th>
+                        <th>别名</th>
+                        <th>爬虫</th>
+                        <th>说明</th>
+                        <th>创建时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for project in projects %}
+                        <tr>
+                            <td><a href="#" class="btn btn-link"
+                                   onclick="$('#form-header').removeClass('hidden');$('#name').val('{{ project.name }}');$('#alias').val('{{ project.alias }}');$('#description').val('{{ project.description }}');$('#project_id').val('{{ project.id }}');">更新egg</a>
+                            </td>
+                            <td>{{ project.name }}</td>
+                            <td>{{ project.alias }}</td>
+                            <td>
+                                {% for spider in project.spiders %}
+                                    <a class="text-primary" href="#">{{ spider }}</a>
+                                {% endfor %}
+                            </td>
+                            <td>{{ project.description }}</td>
+                            <td>{{ project.create_time|utc_to_local }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- /.box -->
+
+    </section>
+    <!-- /.content -->
+{% endblock %}
+{% block js %}
+    <script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $('table').DataTable({
+                "searching": "在表格中搜索:",
+                "info": true,
+                "language": {
+                    "sProcessing": "处理中...",
+                    "sLengthMenu": "显示 _MENU_ 项结果",
+                    "sZeroRecords": "没有匹配结果",
+                    "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                    "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                    "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                    "sInfoPostFix": "",
+                    "sSearch": "搜索:",
+                    "sUrl": "",
+                    "sEmptyTable": "表中数据为空",
+                    "sLoadingRecords": "载入中...",
+                    "sInfoThousands": ",",
+                    "oPaginate": {
+                        "sFirst": "首页",
+                        "sPrevious": "上页",
+                        "sNext": "下页",
+                        "sLast": "末页"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": 以升序排列此列",
+                        "sSortDescending": ": 以降序排列此列"
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

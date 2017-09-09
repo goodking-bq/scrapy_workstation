@@ -1,0 +1,14 @@
+name: minion1
+#redis:
+#  host: 192.168.137.3
+#  port: 6379
+#  db: 2
+#  prefix: 'SCRAPYD:'
+log:
+  level: info
+  file: log/app.log
+mongo:
+  host: 192.168.137.1
+  port: 27017
+  db: scrapy_workstation
+master_url: http://192.168.137.3:5103
